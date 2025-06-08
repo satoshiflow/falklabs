@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  # Node.js API mit Multi-Agent-Workflow
+  karma-service:
+    image: node:20
+    container_name: karma-service
+    working_dir: /usr/src/app
+    volumes:
+      - ./karma-service:/usr/src/app
+    ports:
+      - "5000:5000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    networks:
+      - internal
+
+  # Graphdatenbank
+  neo4j:
+    image: neo4j:5
+    container_name: neo4j
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      - NEO4J_AUTH=neo4j/${NEO4J_PASSWORD}
+    volumes:
+      - neo4j-data:/data
+    networks:
+      - internal
+
+  # Next.js UI (Platzhalter)
+  frontend:
+    image: node:20
+    container_name: frontend
+    working_dir: /usr/src/app
+    volumes:
+      - ./frontend:/usr/src/app
+    ports:
+      - "3000:3000"
+    environment:
+      - KARMA_API_URL=${KARMA_API_URL}
+    networks:
+      - internal
+
+  # Projekt-API (z.\xA0B. f\xC3\xBCr LandRad, SatoshiFlow)
+  backend:
+    image: node:20
+    container_name: backend
+    working_dir: /usr/src/app
+    volumes:
+      - ./backend:/usr/src/app
+    ports:
+      - "4000:4000"
+    environment:
+      - KARMA_API_URL=${KARMA_API_URL}
+    networks:
+      - internal
+
+networks:
+  internal:
+    driver: bridge
+
+volumes:
+  neo4j-data:
