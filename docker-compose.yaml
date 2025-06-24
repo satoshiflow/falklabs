@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
       target: bolt-ai-production
     # ports:
-    #  - '5173:3000'
+      - '5173:3000'
     env_file: '.env.local'
     environment:
       - NODE_ENV=production
@@ -30,8 +30,8 @@ services:
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     command: pnpm run dockerstart
-    profiles:
-      - production
+    # profiles:
+    #  - production
 
   app-dev:
     image: bolt-ai:development
